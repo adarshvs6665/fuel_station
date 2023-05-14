@@ -7,7 +7,6 @@ import 'package:fuel_station/screens/confirm_location.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 
-import '../data/app_data.dart';
 import '../widget/reuseable_row_for_cart.dart';
 import '../main_wrapper.dart';
 import '../model/base_model.dart';
@@ -34,10 +33,13 @@ class _CartState extends State<Cart> {
     String url = '${baseUrl}/cart';
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
-      print("printing");
-      print(response.body);
-      final data = jsonDecode(response.body) as List<dynamic>;
-      final cartData = data.map((json) {
+      // print("printing");
+      // print(response.body);
+      final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+      final data = responseData['data'] as List<dynamic>;
+      // print(responseData['status']);
+      // print(data);
+      final List<CartModel> cartData = data.map((json) {
         final item = BaseModel(
           id: json['item']['id'] as int,
           imageUrl: json['item']['imageUrl'] as String,
@@ -57,6 +59,24 @@ class _CartState extends State<Cart> {
       setState(() {
         itemsOnCartDev = cartData;
       });
+    } else {
+      throw Exception('Failed to post to card');
+    }
+  }
+
+  Future<void> removeCartItem(String cartId) async {
+    String url = '${baseUrl}/cart';
+    final headers = {'Content-Type': 'application/json'};
+    final payload = jsonEncode({
+      "data": {"cartId": cartId}
+    });
+    final response =
+        await http.delete(Uri.parse(url), headers: headers, body: payload);
+    if (response.statusCode == 200) {
+      print("printing");
+      // print(response.body);
+      final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+
     } else {
       throw Exception('Failed to post to card');
     }
@@ -107,11 +127,14 @@ class _CartState extends State<Cart> {
 
   /// delete function for cart
   void onDelete(CartModel data) {
+    removeCartItem(data.cartId);
     setState(() {
       if (itemsOnCartDev.length == 1) {
         itemsOnCartDev.clear();
       } else {
-        itemsOnCartDev.removeWhere((element) => element.cartId == data.cartId);
+        itemsOnCartDev.removeWhere((element) {
+          return element.cartId == data.cartId;
+        });
       }
     });
   }

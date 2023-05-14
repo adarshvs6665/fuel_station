@@ -75,7 +75,7 @@ List<BaseModel> mainList = [
   ),
 ];
 
-List<BaseModel> itemsOnCart = [];
+// List<BaseModel> itemsOnCart = [];
 List<BaseModel> itemsOnSearch = [];
 
 

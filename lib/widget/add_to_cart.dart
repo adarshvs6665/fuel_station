@@ -40,6 +40,7 @@ class AddToCart {
   static void addToCart(BaseModel data, BuildContext context) async {
     String url = '$baseUrl/cart';
     print(url);
+    print(data.toJson());
     final headers = {'Content-Type': 'application/json'};
     final payload = jsonEncode({"data": data.toJson()});
     final response =
@@ -47,7 +48,7 @@ class AddToCart {
     final responseBodyJSON = json.decode(response.body);
     String message = responseBodyJSON["message"];
     if (response.statusCode == 200) {
-      itemsOnCart.add(data);
+      // itemsOnCart.add(data);
 
       // ignore: use_build_context_synchronously
       AdvanceSnackBar(
