@@ -1,8 +1,10 @@
+import 'package:fuel_station/model/location_model.dart';
+
 class DeliveryPartnerModel {
   final String deliveryPartnerId;
   final String deliveryTime;
   final String deliveryPartnerMobileNumber;
-  String deliveryPartnerLocation;
+  Location deliveryPartnerLocation;
 
   DeliveryPartnerModel({
     required this.deliveryPartnerId,
@@ -11,10 +13,21 @@ class DeliveryPartnerModel {
     required this.deliveryPartnerLocation,
   });
 
+  factory DeliveryPartnerModel.fromJson(Map<String, dynamic> json) {
+    return DeliveryPartnerModel(
+      deliveryPartnerId: json['deliveryPartnerId'] as String,
+      deliveryTime: json['deliveryTime'] as String,
+      deliveryPartnerMobileNumber:
+          json['deliveryPartnerMobileNumber'] as String,
+      deliveryPartnerLocation: Location.fromJson(
+          json['deliveryPartnerLocation'] as Map<String, dynamic>),
+    );
+  }
+
   Map<String, dynamic> toJson() => {
         'deliveryPartnerId': deliveryPartnerId,
         'deliveryTime': deliveryTime,
         'deliveryPartnerMobileNumber': deliveryPartnerMobileNumber,
-        'deliveryPartnerLocation': deliveryPartnerLocation
+        'deliveryPartnerLocation': deliveryPartnerLocation.toJson()
       };
 }

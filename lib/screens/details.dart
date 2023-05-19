@@ -35,31 +35,6 @@ class _DetailsState extends State<Details> {
     // fetchData();
   }
 
-  // Future<void> fetchData() async {
-  //   String url = '${baseUrl}/cart';
-  //   final response =
-  //       await http.get(Uri.parse(url));
-  //   if (response.statusCode == 200) {
-  //     print("printing");
-  //     print(response.body);
-  //     // final data = jsonDecode(response.body) as List<dynamic>;
-  //     // final orders = data
-  //     //     .map((json) => Order(
-  //     //           name: json['name'],
-  //     //           deliveryTime: json['deliveryTime'],
-  //     //           price: json['price'].toDouble(),
-  //     //           image: json['image'],
-  //     //           completed: json['completed'],
-  //     //           quantity: json['quantity'],
-  //     //         ))
-  //     //     .toList();
-  //     // setState(() {
-  //     // });
-  //   } else {
-  //     throw Exception('Failed to post to card');
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;

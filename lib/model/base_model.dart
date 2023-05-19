@@ -18,6 +18,19 @@ class BaseModel {
       required this.value,
       required this.quantity});
 
+  factory BaseModel.fromJson(Map<String, dynamic> json) {
+    return BaseModel(
+      id: json['id'] as int,
+      imageUrl: json['imageUrl'] as String,
+      name: json['name'] as String,
+      price: (json['price'] as num).toDouble(),
+      review: (json['review'] as num).toDouble(),
+      star: (json['star'] as num).toDouble(),
+      value: json['value'] as int,
+      quantity: json['quantity'] as String,
+    );
+  }
+  
   Map<String, dynamic> toJson() => {
         'id': id,
         'imageUrl': imageUrl,

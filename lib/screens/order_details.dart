@@ -1,5 +1,6 @@
 import 'package:fuel_station/model/base_model.dart';
 import 'package:fuel_station/model/delivery_partner_model.dart';
+import 'package:fuel_station/model/location_model.dart';
 import 'package:fuel_station/model/orders_model.dart';
 import 'package:fuel_station/screens/order_information.dart';
 import 'package:http/http.dart' as http;
@@ -24,58 +25,95 @@ class _OrderDetailsState extends State<OrderDetails> {
     fetchData();
   }
 
+  List<Order> parseOrders(List<dynamic> json) {
+    return json.map((order) {
+      final orderId = order['orderId'] as String;
+      final itemJson = order['item'] as Map<String, dynamic>;
+      final status = order['status'] as String;
+      final deliveryPartnerJson =
+          order['deliveryPartner'] as Map<String, dynamic>?; // Make it nullable
+      final deliveryLocationJson =
+          order['deliveryLocation'] as Map<String, dynamic>;
+
+      final item = BaseModel.fromJson(itemJson);
+      DeliveryPartnerModel? deliveryPartner; // Make it nullable
+
+      if (deliveryPartnerJson != null) {
+        deliveryPartner = DeliveryPartnerModel.fromJson(deliveryPartnerJson);
+      }
+
+      final deliveryLocation = Location.fromJson(deliveryLocationJson);
+
+      return Order(
+        orderId: orderId,
+        item: item,
+        status: status,
+        deliveryPartner: deliveryPartner,
+        deliveryLocation: deliveryLocation,
+      );
+    }).toList();
+  }
+
   Future<void> fetchData() async {
     String url = '${baseUrl}/order';
-    print(url);
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body) as List<dynamic>;
-      final List<Order> orders = data.map<Order>((orderData) {
-        // Extract the necessary data from each orderData object
-        final orderId = orderData['orderId'];
-        final itemData = orderData['item'];
-        final status = orderData['status'];
-        final deliveryPartnerData = orderData['deliveryPartner'];
-
-        // Create the BaseModel object
-        final item = BaseModel(
-          id: itemData['id'],
-          imageUrl: itemData['imageUrl'],
-          name: itemData['name'],
-          price: itemData['price'].toDouble(),
-          review: itemData['review'].toDouble(),
-          star: itemData['star'].toDouble(),
-          value: itemData['value'],
-          quantity: itemData['quantity'],
-        );
-
-        // Create the DeliveryPartnerModel object
-        final deliveryPartner = DeliveryPartnerModel(
-          deliveryPartnerId: deliveryPartnerData['deliveryPartnerId'],
-          deliveryTime: deliveryPartnerData['deliveryTime'],
-          deliveryPartnerMobileNumber:
-              deliveryPartnerData['deliveryPartnerMobileNumber'],
-          deliveryPartnerLocation:
-              deliveryPartnerData['deliveryPartnerLocation'],
-        );
-
-        // Create and return the Order object
-        return Order(
-          orderId: orderId,
-          item: item,
-          status: status,
-          deliveryPartner: deliveryPartner,
-        );
-      }).toList();
+      final List<Order> orders = parseOrders(data);
 
       setState(() {
         this.orders = orders;
-        print(orders);
       });
     } else {
       throw Exception('Failed to fetch orders');
     }
   }
+
+  // Future<void> fetchData() async {
+  //   String url = '${baseUrl}/order';
+  //   print(url);
+  //   final response = await http.get(Uri.parse(url));
+  //   print(response.body);
+  //   if (response.statusCode == 200) {
+  //     final data = jsonDecode(response.body) as List<dynamic>;
+  //     // print(data);
+
+  //     // List<Order> parseOrders(List<dynamic> json) {
+  //     //   return json.map((order) {
+  //     //     final orderId = order['orderId'] as String;
+  //     //     final itemJson = order['item'] as Map<String, dynamic>;
+  //     //     final status = order['status'] as String;
+  //     //     final deliveryPartnerJson =
+  //     //         order['deliveryPartner'] as Map<String, dynamic>;
+  //     //     final deliveryPartnerLocationJson =
+  //     //         deliveryPartnerJson['deliveryPartnerLocation']
+  //     //             as Map<String, dynamic>;
+
+  //     //     final item = BaseModel.fromJson(itemJson);
+  //     //     final deliveryPartner =
+  //     //         DeliveryPartnerModel.fromJson(deliveryPartnerJson);
+  //     //     final deliveryLocation = Location.fromJson(deliveryPartnerLocationJson);
+
+  //     //     return Order(
+  //     //       orderId: orderId,
+  //     //       item: item,
+  //     //       status: status,
+  //     //       deliveryPartner: deliveryPartner,
+  //     //       deliveryLocation: deliveryLocation,
+  //     //     );
+  //     //   }).toList();
+  //     // }
+
+  //     // print(parseOrders(data));
+  //     final List<Order> orders = parseOrders(data);
+
+  //     setState(() {
+  //       this.orders = orders;
+  //     });
+  //   } else {
+  //     throw Exception('Failed to fetch orders');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -102,16 +140,20 @@ class _OrderDetailsState extends State<OrderDetails> {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                          'Delivery Time: ${orders[index].deliveryPartner.deliveryTime}'),
+                      if (orders[index].status == "PENDING") ...[
+                        const Text('Delivery Time: Not set')
+                      ] else if (orders[index].status == "DELIVERY") ...[
+                        Text(
+                            'Delivery Time: ${orders[index].deliveryPartner?.deliveryTime}')
+                      ],
                       Text('Price: ${orders[index].item.price}'),
                     ],
                   ),
                   trailing: Icon(
-                    orders[index].status != "Pending"
+                    orders[index].status != "PENDING"
                         ? Icons.check_circle
                         : Icons.watch_later,
-                    color: orders[index].status != "Pending"
+                    color: orders[index].status != "PENDING"
                         ? Colors.green
                         : Color.fromARGB(185, 244, 67, 54),
                   ),

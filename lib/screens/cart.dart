@@ -76,9 +76,8 @@ class _CartState extends State<Cart> {
       print("printing");
       // print(response.body);
       final responseData = jsonDecode(response.body) as Map<String, dynamic>;
-
     } else {
-      throw Exception('Failed to post to card');
+      throw Exception('Failed to remove cart');
     }
   }
 
@@ -92,34 +91,32 @@ class _CartState extends State<Cart> {
         total = total + data.item.price * data.item.value;
       }
     }
+    total = total + itemsOnCartDev.length * deliveryCostForSingleItem;
     return total;
   }
 
   /// Calculate Shipping
   double calculateShipping() {
-    double shipping = 0.0;
+    double shipping = 0;
     if (itemsOnCartDev.isEmpty) {
-      shipping = 0.0;
-      return shipping;
-    } else if (itemsOnCartDev.length <= 4) {
-      shipping = 25.99;
+      shipping = 0;
       return shipping;
     } else {
-      shipping = 88.99;
+      shipping = (itemsOnCartDev.length * deliveryCostForSingleItem).toDouble();
       return shipping;
     }
   }
 
   /// Calculate the Sub Total Price
-  int calculateSubTotalPrice() {
-    int subTotal = 0;
+  double calculateSubTotalPrice() {
+    double subTotal = 0;
     if (itemsOnCartDev.isEmpty) {
       subTotal = 0;
     } else {
       for (CartModel data in itemsOnCartDev) {
-        subTotal = subTotal + data.item.price.round();
+        subTotal = subTotal + data.item.price;
         print(subTotal);
-        subTotal = subTotal - 160;
+        // subTotal = subTotal - 160;
       }
     }
     return subTotal < 0 ? 0 : subTotal;
@@ -405,23 +402,6 @@ class _CartState extends State<Cart> {
                   child: Column(
                     children: [
                       FadeInUp(
-                        delay: const Duration(milliseconds: 350),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Promo/Student Code or Vourchers",
-                              style:
-                                  textTheme.headline3?.copyWith(fontSize: 16),
-                            ),
-                            const Icon(
-                              Icons.arrow_forward_ios_sharp,
-                              color: Colors.grey,
-                            ),
-                          ],
-                        ),
-                      ),
-                      FadeInUp(
                         delay: const Duration(milliseconds: 400),
                         child: ReuseableRowForCart(
                           price: calculateSubTotalPrice().toDouble(),
@@ -442,7 +422,8 @@ class _CartState extends State<Cart> {
                       FadeInUp(
                         delay: const Duration(milliseconds: 500),
                         child: ReuseableRowForCart(
-                          price: calculateTotalPrice(),
+                          price: double.parse(
+                              calculateTotalPrice().toStringAsFixed(2)),
                           text: 'Total',
                         ),
                       ),
@@ -453,11 +434,14 @@ class _CartState extends State<Cart> {
                           child: ReuseableButton(
                               text: "Checkout",
                               onTap: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const ConfirmLocation()));
+                                itemsOnCartDev.isNotEmpty
+                                    ? Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ConfirmLocation(
+                                                    data: itemsOnCartDev)))
+                                    : null;
                               }),
                         ),
                       )
