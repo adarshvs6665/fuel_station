@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:fuel_station/model/cart_model.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:fuel_station/screens/confirm_location.dart';
 import 'package:flutter/material.dart';
@@ -183,11 +184,7 @@ class _CartState extends State<Cart> {
                             delay: const Duration(milliseconds: 300),
                             child: IconButton(
                               onPressed: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const MainWrapper()));
+                                Get.offAll(MainWrapper());
                               },
                               icon: const Icon(
                                 Icons.shopping_bag_outlined,
@@ -432,17 +429,14 @@ class _CartState extends State<Cart> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 15.0),
                           child: ReuseableButton(
-                              text: "Checkout",
-                              onTap: () {
-                                itemsOnCartDev.isNotEmpty
-                                    ? Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ConfirmLocation(
-                                                    data: itemsOnCartDev)))
-                                    : null;
-                              }),
+                            text: "Checkout",
+                            onTap: () {
+                              if (itemsOnCartDev.isNotEmpty) {
+                                Get.offAll(() =>
+                                    ConfirmLocation(data: itemsOnCartDev));
+                              }
+                            },
+                          ),
                         ),
                       )
                     ],
@@ -468,7 +462,7 @@ class _CartState extends State<Cart> {
       ),
       leading: IconButton(
         onPressed: () {
-          Navigator.pop(context);
+          Get.back();
         },
         icon: const Icon(
           Icons.arrow_back_rounded,

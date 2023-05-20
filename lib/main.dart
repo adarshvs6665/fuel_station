@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_station/screens/login.dart';
+import 'package:get/get.dart';
 
 import '../utils/app_theme.dart';
 import 'main_wrapper.dart';
 
-
 void main() => runApp(
-      MaterialApp(
+      GetMaterialApp(
         theme: AppTheme.appTheme,
         debugShowCheckedModeBanner: false,
-        home: const MainWrapper(),
-        ),
-      );
-
-
+        home: LoginPage(),
+        // home: const MainWrapper(),
+      ),
+    );

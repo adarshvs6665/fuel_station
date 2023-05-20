@@ -1,5 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:fuel_station/controller/user_controller.dart';
+import 'package:get/get.dart';
 
 import '../data/app_data.dart';
 import '../screens/details.dart';
@@ -23,6 +25,10 @@ class _HomeState extends State<Home> {
     _pageController =
         PageController(initialPage: _currentIndex, viewportFraction: 0.7);
     super.initState();
+
+    final userController = Get.find<UserController>();
+    final userData = userController.user.value['name'];
+    print(userData);
   }
 
   @override
@@ -123,16 +129,13 @@ class _HomeState extends State<Home> {
                       itemBuilder: (context, index) {
                         BaseModel current = mainList[index];
                         return GestureDetector(
-                          onTap: (() => Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                  return Details(
-                                    data: current,
-                                    isCameFromMostPopularPart: true,
-                                  );
-                                }),
-                              )),
+                          onTap: () {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            Get.to(() => Details(
+                                  data: current,
+                                  isCameFromMostPopularPart: true,
+                                ));
+                          },
                           child: Hero(
                             tag: current.imageUrl,
                             child: Column(
@@ -183,7 +186,6 @@ class _HomeState extends State<Home> {
                               ],
                             ),
                           ),
-                        
                         );
                       }),
                 ),

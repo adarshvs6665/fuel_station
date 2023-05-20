@@ -1,8 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:fuel_station/model/orders_model.dart';
+import 'package:fuel_station/widget/reuseable_button.dart';
 import 'package:fuel_station/widget/reuseable_row_for_cart.dart';
 import 'package:fuel_station/widget/reuseable_text%20.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 
 class OrderInformation extends StatefulWidget {
@@ -43,8 +45,8 @@ class _OrderInformationState extends State<OrderInformation> {
         ),
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
-          },
+              Get.back();
+},
           icon: const Icon(
             Icons.arrow_back_rounded,
             color: Colors.black,
@@ -70,12 +72,12 @@ class _OrderInformationState extends State<OrderInformation> {
                 child: SizedBox(
                   width: double.infinity,
                   child: AspectRatio(
-                    aspectRatio: 1,
+                    aspectRatio: 1.4,
                     child: Image.asset(
                       order.item.imageUrl,
-                      height: 200,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
+                      // height: 200,
+                      width: 100,
+                      // fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -180,8 +182,8 @@ class _OrderInformationState extends State<OrderInformation> {
                                 ),
                                 FadeInUp(
                                   delay: const Duration(milliseconds: 400),
-                                  child: const ReuseableRowForCart(
-                                    price: 22,
+                                  child: ReuseableRowForCart(
+                                    price: order.item.price,
                                     text: 'Sub Total',
                                   ),
                                 ),
@@ -200,13 +202,18 @@ class _OrderInformationState extends State<OrderInformation> {
                                                     fontSize: 16)),
                                         if (order.status == "PENDING") ...[
                                           const ReuseableTextComponent(
-                                            inputText: "Not set",
+                                            inputText: "Not available",
                                           )
                                         ] else if (order.status ==
                                             "DELIVERY") ...[
                                           ReuseableTextComponent(
                                             inputText: order
                                                 .deliveryPartner!.deliveryTime,
+                                          )
+                                        ] else if (order.status ==
+                                            "COMPLETED") ...[
+                                          const ReuseableTextComponent(
+                                            inputText: "Delivered",
                                           )
                                         ]
                                       ],
@@ -227,7 +234,8 @@ class _OrderInformationState extends State<OrderInformation> {
                                                     color: Colors.grey,
                                                     fontSize: 16)),
                                         ReuseableTextComponent(
-                                          inputText: order.orderId.substring(0, 20),
+                                          inputText:
+                                              order.orderId.substring(0, 20),
                                         )
                                       ],
                                     ),
@@ -242,6 +250,19 @@ class _OrderInformationState extends State<OrderInformation> {
                   ),
                 ),
               ),
+              if (order.status == "DELIVERY") ...[
+                FadeInUp(
+                  delay: const Duration(milliseconds: 550),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 15.0),
+                    child: ReuseableButton(
+                        text: "Track Order",
+                        onTap: () {
+                          print("tapped");
+                        }),
+                  ),
+                )
+              ]
             ],
           )),
     );

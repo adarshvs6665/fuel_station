@@ -3,6 +3,7 @@ import 'package:fuel_station/model/delivery_partner_model.dart';
 import 'package:fuel_station/model/location_model.dart';
 import 'package:fuel_station/model/orders_model.dart';
 import 'package:fuel_station/screens/order_information.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../utils/constants.dart';
@@ -64,56 +65,11 @@ class _OrderDetailsState extends State<OrderDetails> {
       setState(() {
         this.orders = orders;
       });
+      // print(orders);
     } else {
       throw Exception('Failed to fetch orders');
     }
   }
-
-  // Future<void> fetchData() async {
-  //   String url = '${baseUrl}/order';
-  //   print(url);
-  //   final response = await http.get(Uri.parse(url));
-  //   print(response.body);
-  //   if (response.statusCode == 200) {
-  //     final data = jsonDecode(response.body) as List<dynamic>;
-  //     // print(data);
-
-  //     // List<Order> parseOrders(List<dynamic> json) {
-  //     //   return json.map((order) {
-  //     //     final orderId = order['orderId'] as String;
-  //     //     final itemJson = order['item'] as Map<String, dynamic>;
-  //     //     final status = order['status'] as String;
-  //     //     final deliveryPartnerJson =
-  //     //         order['deliveryPartner'] as Map<String, dynamic>;
-  //     //     final deliveryPartnerLocationJson =
-  //     //         deliveryPartnerJson['deliveryPartnerLocation']
-  //     //             as Map<String, dynamic>;
-
-  //     //     final item = BaseModel.fromJson(itemJson);
-  //     //     final deliveryPartner =
-  //     //         DeliveryPartnerModel.fromJson(deliveryPartnerJson);
-  //     //     final deliveryLocation = Location.fromJson(deliveryPartnerLocationJson);
-
-  //     //     return Order(
-  //     //       orderId: orderId,
-  //     //       item: item,
-  //     //       status: status,
-  //     //       deliveryPartner: deliveryPartner,
-  //     //       deliveryLocation: deliveryLocation,
-  //     //     );
-  //     //   }).toList();
-  //     // }
-
-  //     // print(parseOrders(data));
-  //     final List<Order> orders = parseOrders(data);
-
-  //     setState(() {
-  //       this.orders = orders;
-  //     });
-  //   } else {
-  //     throw Exception('Failed to fetch orders');
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -125,9 +81,7 @@ class _OrderDetailsState extends State<OrderDetails> {
             padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: GestureDetector(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => OrderInformation(order: orders[index]),
-                ));
+                Get.to(() => OrderInformation(order: orders[index]));
               },
               child: Card(
                 elevation: 4.0,
@@ -141,7 +95,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (orders[index].status == "PENDING") ...[
-                        const Text('Delivery Time: Not set')
+                        const Text('Delivery Time: Not available')
                       ] else if (orders[index].status == "DELIVERY") ...[
                         Text(
                             'Delivery Time: ${orders[index].deliveryPartner?.deliveryTime}')
@@ -149,14 +103,24 @@ class _OrderDetailsState extends State<OrderDetails> {
                       Text('Price: ${orders[index].item.price}'),
                     ],
                   ),
-                  trailing: Icon(
-                    orders[index].status != "PENDING"
-                        ? Icons.check_circle
-                        : Icons.watch_later,
-                    color: orders[index].status != "PENDING"
-                        ? Colors.green
-                        : Color.fromARGB(185, 244, 67, 54),
-                  ),
+                  trailing: () {
+                    if (orders[index].status == "PENDING") {
+                      return const Icon(
+                        Icons.watch_later,
+                        color: Colors.orange,
+                      );
+                    } else if (orders[index].status == "DELIVERY") {
+                      return const Icon(
+                        Icons.share_location,
+                        color: Colors.blue,
+                      );
+                    } else if (orders[index].status == "COMPLETED") {
+                      return const Icon(
+                        Icons.check_circle,
+                        color: Colors.green,
+                      );
+                    }
+                  }(),
                 ),
               ),
             ),

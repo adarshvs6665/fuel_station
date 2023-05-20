@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:fuel_station/utils/constants.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:animate_do/animate_do.dart';
 import 'package:fuel_station/model/cart_model.dart';
@@ -174,19 +175,12 @@ class _ConfirmLocationState extends State<ConfirmLocation> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 15.0),
                           child: ReuseableButton(
-                              text: "Place Order",
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return OrderSuccessPage(
-                                          position: _currentPosition!,
-                                          data: data);
-                                    },
-                                  ),
-                                );
-                              }),
+                            text: "Place Order",
+                            onTap: () {
+                              Get.to(() => OrderSuccessPage(
+                                  position: _currentPosition!, data: data));
+                            },
+                          ),
                         ),
                       )
                     ],
@@ -212,7 +206,7 @@ class _ConfirmLocationState extends State<ConfirmLocation> {
       ),
       leading: IconButton(
         onPressed: () {
-          Navigator.pop(context);
+          Get.back();
         },
         icon: const Icon(
           Icons.arrow_back_rounded,

@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 
 import '../model/base_model.dart';
@@ -116,17 +117,13 @@ class _SearchState extends State<Search> {
                           return FadeInUp(
                             delay: Duration(milliseconds: 100 * index),
                             child: GestureDetector(
-                              onTap: (() => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) {
-                                      FocusManager.instance.primaryFocus
-                                          ?.unfocus();
-                                      return Details(
-                                        data: current,
-                                        isCameFromMostPopularPart: false,
-                                      );
-                                    }),
-                                  )),
+                              onTap: () {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                Get.to(() => Details(
+                                      data: current,
+                                      isCameFromMostPopularPart: false,
+                                    ));
+                              },
                               child: Hero(
                                 tag: current.id,
                                 child: Stack(

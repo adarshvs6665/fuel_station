@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import '../model/base_model.dart';
@@ -250,7 +251,7 @@ class _DetailsState extends State<Details> {
       ],
       leading: IconButton(
         onPressed: () {
-          Navigator.pop(context);
+          Get.back();
         },
         icon: const Icon(
           Icons.arrow_back_rounded,

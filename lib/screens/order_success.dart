@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:fuel_station/model/location_model.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:fuel_station/model/cart_model.dart';
@@ -79,11 +80,7 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => MainWrapper()),
-            (route) => false,
-          );
+          Get.offAll(() => MainWrapper());
           return false;
         },
         child: Scaffold(
@@ -100,10 +97,7 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
             ),
             leading: IconButton(
               onPressed: () {
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => MainWrapper()),
-                  (Route<dynamic> route) => false,
-                );
+                Get.offAll(() => MainWrapper());
               },
               icon: const Icon(
                 Icons.arrow_back_rounded,
@@ -121,46 +115,45 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
             ],
           ),
           body: Center(
-            child: _isLoading
-                ? CircularProgressIndicator()
-                : _isOrderPlaced
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(
-                            Icons.check_circle,
-                            color: Colors.green,
-                            size: 80.0,
-                          ),
-                          SizedBox(height: 20.0),
-                          Text(
-                            'Ordered Successfully!',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
+              child: _isLoading
+                  ? CircularProgressIndicator()
+                  : _isOrderPlaced
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(
+                              Icons.check_circle,
+                              color: Colors.green,
+                              size: 80.0,
                             ),
-                          ),
-                        ],
-                      )
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(
-                            Icons.cancel,
-                            color: Colors.red,
-                            size: 80.0,
-                          ),
-                          SizedBox(height: 20.0),
-                          Text(
-                            'Order failed!',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
+                            SizedBox(height: 20.0),
+                            Text(
+                              'Ordered Successfully!',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                        ],
-                      )
-          ),
+                          ],
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(
+                              Icons.cancel,
+                              color: Colors.red,
+                              size: 80.0,
+                            ),
+                            SizedBox(height: 20.0),
+                            Text(
+                              'Order failed!',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        )),
         ));
   }
 }

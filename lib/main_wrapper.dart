@@ -1,7 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:bottom_bar_matu/bottom_bar_matu.dart';
+import 'package:fuel_station/screens/login.dart';
 import 'package:fuel_station/screens/order_details.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 
 import '../screens/cart.dart';
@@ -78,25 +80,6 @@ class _MainWrapperState extends State<MainWrapper> {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                isSearchActive = !isSearchActive;
-                isOrdersActive = false;
-              });
-            },
-            icon: isSearchActive
-                ? const Icon(
-                    LineIcons.searchMinus,
-                    color: Colors.black,
-                    size: 30,
-                  )
-                : const Icon(
-                    LineIcons.search,
-                    color: Colors.black,
-                    size: 30,
-                  ),
-          ),
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
@@ -106,12 +89,20 @@ class _MainWrapperState extends State<MainWrapper> {
                 size: 30,
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Cart(),
-                  ),
-                );
+                Get.to(() => Cart());
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              icon: const Icon(
+                Icons.logout,
+                color: Colors.grey,
+                size: 30,
+              ),
+              onPressed: () {
+                Get.to(LoginPage());
               },
             ),
           ),
