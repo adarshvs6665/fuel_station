@@ -64,8 +64,8 @@ List<BaseModel> mainList = [
     quantity: "1L",
   ),
   BaseModel(
-    imageUrl: "assets/images/kerosene.jpg",
-    name: "Kerosene",
+    imageUrl: "assets/images/cng.jpg",
+    name: "CNG",
     price: 56.99,
     review: 1.4,
     star: 2.4,
