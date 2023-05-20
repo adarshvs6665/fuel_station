@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fuel_station/controller/user_controller.dart';
 import 'package:fuel_station/main_wrapper.dart';
 import 'package:fuel_station/utils/constants.dart';
@@ -8,9 +9,24 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:fuel_station/screens/signup.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  // Move the controller and fToast variables inside the state class
+  // Move the controller and fToast variables inside the state class
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  late FToast fToast;
+
+  @override
+  void initState() {
+    super.initState();
+    fToast = FToast();
+    fToast.init(context);
+  }
 
   Future<void> loginUser() async {
     // Get.to(MainWrapper());
@@ -28,10 +44,9 @@ class LoginPage extends StatelessWidget {
       final response =
           await http.post(Uri.parse(url), headers: headers, body: payload);
       final userController = Get.find<UserController>();
-      print(userController.user.value);
+      final responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         // API call successful
-        final responseData = jsonDecode(response.body);
         final userData = responseData['data'];
         // Store user info using GetX
 
@@ -41,7 +56,15 @@ class LoginPage extends StatelessWidget {
         Get.to(const MainWrapper());
       } else {
         // Handle API error
-        print('API Error: ${response.statusCode}');
+        final responseMessage = responseData['message'];
+        Fluttertoast.showToast(
+            msg: responseMessage,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.orange,
+            textColor: Colors.white,
+            fontSize: 6.0);
       }
     } catch (e) {
       // Handle network error

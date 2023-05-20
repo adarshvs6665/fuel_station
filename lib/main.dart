@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fuel_station/controller/user_controller.dart';
 import 'package:fuel_station/screens/login.dart';
 import 'package:get/get.dart';
@@ -26,6 +27,7 @@ void main() async {
     GetMaterialApp(
       theme: AppTheme.appTheme,
       debugShowCheckedModeBanner: false,
+      builder: FToastBuilder(),
       home: initialPage,
       // home: const MainWrapper(),
     ),
