@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:fuel_station/controller/user_controller.dart';
 import 'package:fuel_station/model/location_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -25,6 +26,9 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
   bool _isOrderPlaced = false;
 
   Future<void> placeOrder() async {
+    final userController = Get.find<UserController>();
+    final userId = userController.user.value['userId'];
+
     // Prepare the request body
     List<Map<String, dynamic>> cartDataJson =
         (widget.data).map((cart) => cart.toJson()).toList();
@@ -33,6 +37,7 @@ class _OrderSuccessPageState extends State<OrderSuccessPage> {
     final location =
         Location(latitude: position.latitude, longitude: position.longitude);
     Map<String, dynamic> requestBody = {
+      'userId': userId,
       'cartData': cartDataJson,
       'position': location,
     };

@@ -27,13 +27,14 @@ class LoginPage extends StatelessWidget {
       });
       final response =
           await http.post(Uri.parse(url), headers: headers, body: payload);
-
+      final userController = Get.find<UserController>();
+      print(userController.user.value);
       if (response.statusCode == 200) {
         // API call successful
         final responseData = jsonDecode(response.body);
         final userData = responseData['data'];
         // Store user info using GetX
-        final userController = Get.put(UserController());
+
         userController.setUser(userData);
 
         // Navigate to another page

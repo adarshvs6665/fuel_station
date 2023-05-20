@@ -1,3 +1,4 @@
+import 'package:fuel_station/controller/user_controller.dart';
 import 'package:fuel_station/model/base_model.dart';
 import 'package:fuel_station/model/delivery_partner_model.dart';
 import 'package:fuel_station/model/location_model.dart';
@@ -56,8 +57,15 @@ class _OrderDetailsState extends State<OrderDetails> {
   }
 
   Future<void> fetchData() async {
+    final userController = Get.find<UserController>();
+    final userId = userController.user.value['userId'];
+    final queryParameters = {'userId': userId};
+
+print("####################");
+    print(userId);
     String url = '${baseUrl}/order';
-    final response = await http.get(Uri.parse(url));
+    final response = await http
+        .get(Uri.parse(url).replace(queryParameters: queryParameters));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body) as List<dynamic>;
       final List<Order> orders = parseOrders(data);

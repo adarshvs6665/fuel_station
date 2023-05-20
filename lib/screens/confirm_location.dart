@@ -47,22 +47,6 @@ class _ConfirmLocationState extends State<ConfirmLocation> {
           ),
         );
       });
-
-      // print(
-      //     "###################################################################");
-      // // Prepare the request body
-      // List<Map<String, dynamic>> cartDataJson =
-      //     (widget.data).map((cart) => cart.toJson()).toList();
-      // Map<String, dynamic> requestBody = {
-      //   'cartData': cartDataJson,
-      //   'position': position.toJson(),
-      // };
-
-      // String url = '${baseUrl}/order';
-      // final headers = {'Content-Type': 'application/json'};
-      // final payload = jsonEncode(requestBody);
-      // final response =
-      //     await http.post(Uri.parse(url), headers: headers, body: payload);
     }).catchError((e) {
       print(e);
     });

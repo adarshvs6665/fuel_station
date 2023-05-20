@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:bottom_bar_matu/bottom_bar_matu.dart';
+import 'package:fuel_station/controller/user_controller.dart';
 import 'package:fuel_station/screens/login.dart';
 import 'package:fuel_station/screens/order_details.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,8 @@ class _MainWrapperState extends State<MainWrapper> {
   Widget build(BuildContext context) {
     Widget bodyWidget;
     Widget appbarTitle;
+
+    final userController = Get.find<UserController>();
 
     if (isSearchActive) {
       bodyWidget = const Search();
@@ -102,6 +105,7 @@ class _MainWrapperState extends State<MainWrapper> {
                 size: 30,
               ),
               onPressed: () {
+                userController.clearUserDetails();
                 Get.to(LoginPage());
               },
             ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:fuel_station/controller/user_controller.dart';
 import 'package:fuel_station/model/cart_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -31,8 +32,12 @@ class _CartState extends State<Cart> {
   }
 
   Future<void> fetchData() async {
+    final userController = Get.find<UserController>();
+    final userId = userController.user.value['userId'];
+    final queryParameters = {'userId': userId};
     String url = '${baseUrl}/cart';
-    final response = await http.get(Uri.parse(url));
+    final response = await http
+        .get(Uri.parse(url).replace(queryParameters: queryParameters));
     if (response.statusCode == 200) {
       // print("printing");
       // print(response.body);

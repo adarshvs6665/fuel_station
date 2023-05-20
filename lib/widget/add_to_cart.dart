@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:fuel_station/controller/user_controller.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:advance_notification/advance_notification.dart';
 import 'package:flutter/material.dart';
@@ -38,11 +40,12 @@ class AddToCart {
   // }
 
   static void addToCart(BaseModel data, BuildContext context) async {
+    final userController = Get.find<UserController>();
+    final userId = userController.user.value['userId'];
+
     String url = '$baseUrl/cart';
-    print(url);
-    print(data.toJson());
     final headers = {'Content-Type': 'application/json'};
-    final payload = jsonEncode({"data": data.toJson()});
+    final payload = jsonEncode({"userId": userId, "data": data.toJson()});
     final response =
         await http.post(Uri.parse(url), headers: headers, body: payload);
     final responseBodyJSON = json.decode(response.body);

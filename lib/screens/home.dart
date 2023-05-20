@@ -27,8 +27,8 @@ class _HomeState extends State<Home> {
     super.initState();
 
     final userController = Get.find<UserController>();
-    final userData = userController.user.value['name'];
-    print(userData);
+    final userId = userController.user.value['userId'];
+    print(userId);
   }
 
   @override
