@@ -9,7 +9,6 @@ import 'package:line_icons/line_icons.dart';
 
 import '../screens/cart.dart';
 import '../screens/home.dart';
-import '../screens/search.dart';
 import '../utils/constants.dart';
 
 class MainWrapper extends StatefulWidget {
@@ -21,12 +20,10 @@ class MainWrapper extends StatefulWidget {
 
 class _MainWrapperState extends State<MainWrapper> {
   int _index = 0;
-  bool isSearchActive = false;
   bool isOrdersActive = false;
 
   List<Widget> screens = [
     const Home(),
-    const Search(),
     const OrderDetails(),
   ];
 
@@ -37,17 +34,7 @@ class _MainWrapperState extends State<MainWrapper> {
 
     final userController = Get.find<UserController>();
 
-    if (isSearchActive) {
-      bodyWidget = const Search();
-      appbarTitle = FadeIn(
-        delay: const Duration(milliseconds: 300),
-        child: const Text(
-          "Search",
-          style: TextStyle(
-              fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
-        ),
-      );
-    } else if (isOrdersActive) {
+    if (isOrdersActive) {
       bodyWidget = const OrderDetails();
       appbarTitle = FadeIn(
         delay: const Duration(milliseconds: 300),
@@ -135,12 +122,6 @@ class _MainWrapperState extends State<MainWrapper> {
               _index = 1;
             });
           }
-          // else {
-          //   setState(() {
-          //     isOrdersActive = false;
-          //     _index = 3;
-          //   });
-          // }
         },
       ),
     );
