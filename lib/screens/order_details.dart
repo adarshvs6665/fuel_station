@@ -61,7 +61,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     final userId = userController.user.value['userId'];
     final queryParameters = {'userId': userId};
 
-print("####################");
+    print("####################");
     print(userId);
     String url = '${baseUrl}/order';
     final response = await http
@@ -79,61 +79,68 @@ print("####################");
     }
   }
 
+  Future<void> onRefresh() async {
+    await fetchData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemCount: orders.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4.0),
-            child: GestureDetector(
-              onTap: () {
-                Get.to(() => OrderInformation(order: orders[index]));
-              },
-              child: Card(
-                elevation: 4.0,
-                margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: ListTile(
-                  leading: Image.asset(orders[index].item.imageUrl),
-                  title: Text(orders[index].item.name),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (orders[index].status == "PENDING") ...[
-                        const Text('Delivery Time: Not available')
-                      ] else if (orders[index].status == "DELIVERY") ...[
-                        Text(
-                            'Delivery Time: ${orders[index].deliveryPartner?.deliveryTime}')
+      body: RefreshIndicator(
+        onRefresh: onRefresh,
+        child: ListView.builder(
+          itemCount: orders.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: GestureDetector(
+                onTap: () {
+                  Get.to(() => OrderInformation(order: orders[index]));
+                },
+                child: Card(
+                  elevation: 4.0,
+                  margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: ListTile(
+                    leading: Image.asset(orders[index].item.imageUrl),
+                    title: Text(orders[index].item.name),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (orders[index].status == "PENDING") ...[
+                          const Text('Delivery Time: Not available')
+                        ] else if (orders[index].status == "DELIVERY") ...[
+                          Text(
+                              'Delivery Time: ${orders[index].deliveryPartner?.deliveryTime}')
+                        ],
+                        Text('Price: ${orders[index].item.price}'),
                       ],
-                      Text('Price: ${orders[index].item.price}'),
-                    ],
+                    ),
+                    trailing: () {
+                      if (orders[index].status == "PENDING") {
+                        return const Icon(
+                          Icons.watch_later,
+                          color: Colors.orange,
+                        );
+                      } else if (orders[index].status == "DELIVERY") {
+                        return const Icon(
+                          Icons.share_location,
+                          color: Colors.blue,
+                        );
+                      } else if (orders[index].status == "COMPLETED") {
+                        return const Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                        );
+                      }
+                    }(),
                   ),
-                  trailing: () {
-                    if (orders[index].status == "PENDING") {
-                      return const Icon(
-                        Icons.watch_later,
-                        color: Colors.orange,
-                      );
-                    } else if (orders[index].status == "DELIVERY") {
-                      return const Icon(
-                        Icons.share_location,
-                        color: Colors.blue,
-                      );
-                    } else if (orders[index].status == "COMPLETED") {
-                      return const Icon(
-                        Icons.check_circle,
-                        color: Colors.green,
-                      );
-                    }
-                  }(),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
