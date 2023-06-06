@@ -45,8 +45,8 @@ class _OrderInformationState extends State<OrderInformation> {
         ),
         leading: IconButton(
           onPressed: () {
-              Get.back();
-},
+            Get.back();
+          },
           icon: const Icon(
             Icons.arrow_back_rounded,
             color: Colors.black,
@@ -89,7 +89,7 @@ class _OrderInformationState extends State<OrderInformation> {
                       Container(
                         padding: const EdgeInsets.all(16.0),
                         width: size.width,
-                        height: size.height * 0.36,
+                        height: size.height * 0.4,
                         color: Colors.white,
                         child: SingleChildScrollView(
                           child: Padding(
@@ -151,6 +151,10 @@ class _OrderInformationState extends State<OrderInformation> {
                                                   "COMPLETED") {
                                                 return Colors
                                                     .green; // Set color to black for other statuses
+                                              } else if (order.status ==
+                                                  "REJECTED") {
+                                                return Colors
+                                                    .red; // Set color to black for other statuses
                                               }
                                             }(),
                                             fontWeight: FontWeight.bold,
@@ -207,8 +211,9 @@ class _OrderInformationState extends State<OrderInformation> {
                                         ] else if (order.status ==
                                             "DELIVERY") ...[
                                           ReuseableTextComponent(
-                                            inputText: order
-                                                .deliveryPartner!.deliveryTime,
+                                            inputText: order.deliveryPartner
+                                                    ?.deliveryTime ??
+                                                "Not set",
                                           )
                                         ] else if (order.status ==
                                             "COMPLETED") ...[
@@ -220,6 +225,30 @@ class _OrderInformationState extends State<OrderInformation> {
                                     ),
                                   ),
                                 ),
+                                if (order.status == "DELIVERY" &&
+                                    order.deliveryPartner != null) ...[
+                                  FadeInUp(
+                                    delay: const Duration(milliseconds: 400),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 12.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Contact",
+                                              style: textTheme.headlineSmall
+                                                  ?.copyWith(
+                                                      color: Colors.grey,
+                                                      fontSize: 16)),
+                                          ReuseableTextComponent(
+                                            inputText: order
+                                                .deliveryPartner!.deliveryPartnerMobileNumber,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                                 FadeInUp(
                                   delay: const Duration(milliseconds: 400),
                                   child: Padding(

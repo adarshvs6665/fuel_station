@@ -41,6 +41,7 @@ class _OrderDetailsState extends State<OrderDetails> {
       DeliveryPartnerModel? deliveryPartner; // Make it nullable
 
       if (deliveryPartnerJson != null) {
+        print(deliveryPartnerJson);
         deliveryPartner = DeliveryPartnerModel.fromJson(deliveryPartnerJson);
       }
 
@@ -132,6 +133,11 @@ class _OrderDetailsState extends State<OrderDetails> {
                         return const Icon(
                           Icons.check_circle,
                           color: Colors.green,
+                        );
+                      } else if (orders[index].status == "REJECTED") {
+                        return const Icon(
+                          Icons.close_rounded,
+                          color: Colors.red,
                         );
                       }
                     }(),
